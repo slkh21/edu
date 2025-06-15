@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title if title else "Обучающая платформа" }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Тема -->
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='css/style-light.css') }}">
+
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.9.0/video-js.css" rel="stylesheet" />
+
+    <script>
+        // Загрузка темы из localStorage
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedTheme = localStorage.getItem("theme");
+            const themeLink = document.getElementById("theme-style");
+            if (savedTheme) {
+                themeLink.href = savedTheme;
+            }
+        });
+
+        function toggleTheme() {
+            const link = document.getElementById('theme-style');
+            const isLight = link.getAttribute('href').includes('light');
+            const newTheme = isLight
+                ? '{{ url_for("static", filename="css/style-dark.css") }}'
+                : '{{ url_for("static", filename="css/style-light.css") }}';
+            link.setAttribute('href', newTheme);
+            localStorage.setItem("theme", newTheme);
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <div class="d-flex align-items-center">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Герб" width="48" height="48" class="me-2">
+                <span class="fw-semibold fs-5">ТУ им. А.А. Леонова</span>
+            </div>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if session.get('user_id') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('course') }}">Курс</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('tasks') }}">Тренажёр</a></li>
+                    {% if session.get('role') == 'teacher' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_videos') }}">Управление курсом</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_tasks') }}">Управление тренажёром</a></li>
+                    {% endif %}
+                    {% if session.get('role') == 'admin' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_users') }}">Пользователи</a></li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('progress') }}">
+                            {% if session.get('role') == 'student' %}Мой прогресс{% else %}Прогресс обучающихся{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link disabled">👤 {{ session.get('full_name') or session.get('username') }}</span>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выход</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Регистрация</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Вход</a></li>
+                {% endif %}
+                <li class="nav-item">
+                    <button class="btn btn-sm btn-outline-light ms-2" onclick="toggleTheme()">🌓</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container" style="padding-top: 140px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} mt-3" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="text-center mt-5 py-3 bg-dark text-light">
+    &copy; {{ now().year }} | Разработчики — Салихов С.М. и Скрипкина Е.В.
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Video.js -->
+<script src="https://vjs.zencdn.net/8.9.0/video.min.js"></script>
+</body>
+</html>

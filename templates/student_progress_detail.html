@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4">Прогресс студента: {{ student.full_name or student.username }}</h2>
+
+{% if progress_by_topic %}
+  {% for topic, items in progress_by_topic.items() %}
+    {% if items %}
+    <div class="card my-3">
+      <div class="card-header">Тема: {{ topic }}</div>
+      <div class="card-body">
+        {% for p in items %}
+          <p><strong>{{ p.task.question }}</strong>  
+            {% if p.is_correct %}
+              <span class="badge bg-success">Верно</span>
+            {% else %}
+              <span class="badge bg-danger">Неверно</span>
+            {% endif %}
+          </p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <p class="text-muted">У этого студента ещё нет выполненных заданий.</p>
+{% endif %}
+
+<a href="{{ url_for('manage_users') }}" class="btn btn-primary mt-3">Назад</a>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Управление пользователями</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Email</th>
+            <th>Текущая роль</th>
+            <th>Изменить роль</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                <form method="POST" class="d-flex align-items-center">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <select name="new_role" class="form-select form-select-sm me-2">
+                        <option value="student" {% if user.role == 'student' %}selected{% endif %}>Ученик</option>
+                        <option value="teacher" {% if user.role == 'teacher' %}selected{% endif %}>Учитель</option>
+                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Админ</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Обновить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

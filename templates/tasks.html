@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4 text-center">Тренажёр</h2>
+
+{% for topic in topics %}
+<div class="card my-3">
+  <div class="card-header fw-bold">{{ topic.title }}</div>
+  <div class="card-body">
+    {% if topic.tasks %}
+    <form method="post" action="{{ url_for('check_tasks') }}" class="topic-form">
+      {% for task in topic.tasks %}
+      <div class="mb-4">
+        <p class="fw-semibold">{{ task.question }}</p>
+
+        {% for option in [task.option1, task.option2, task.option3, task.option4] %}
+        <div class="form-check">
+          <input class="form-check-input"
+                 type="radio"
+                 name="task_{{ task.id }}"
+                 id="task{{ task.id }}opt{{ loop.index }}"
+                 value="{{ option }}"
+                 {% if submitted and answers.get(task.id)==option %}checked{% endif %}
+                 required>
+          <label class="form-check-label" for="task{{ task.id }}opt{{ loop.index }}">{{ option }}</label>
+        </div>
+        {% endfor %}
+
+        {#-- Место для мгновенного вывода результата ‑-#}
+        {% if results and task.id in results %}
+        <div class="alert mt-2 alert-{{ 'success' if results[task.id] else 'danger' }}">
+          {{ 'Правильно!' if results[task.id] else 'Неправильно. Попробуйте ещё раз.' }}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <input type="hidden" name="topic_id" value="{{ topic.id }}">
+      <button class="btn btn-success">Проверить все ответы</button>
+    </form>
+    {% else %}
+      <p class="text-muted">Нет заданий в этой теме.</p>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

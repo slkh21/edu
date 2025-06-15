@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4">Мой прогресс</h2>
+
+{% if progress_by_topic %}
+  {% for topic, items in progress_by_topic.items() %}
+    <h4 class="mt-3">{{ topic }}</h4>
+    <table class="table table-sm">
+      <thead><tr><th>#</th><th>Вопрос</th><th>Статус</th></thead>
+      <tbody>
+        {% for p in items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ p.task.question }}</td>
+          <td>
+            {% if p.is_correct %}
+              <span class="badge bg-success">✔ правильный</span>
+            {% else %}
+              <span class="badge bg-danger">✖ неправ.</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+{% else %}
+  <p>Вы ещё не проходили задания.</p>
+{% endif %}
+{% endblock %}

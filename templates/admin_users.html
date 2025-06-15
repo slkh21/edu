@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4">Пользователи</h2>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>#</th><th>Логин</th><th>Email</th><th>Роль</th><th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ u.username }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.role }}</td>
+      <td>
+        <form method="post" style="display: flex; gap: .5rem;">
+          <!-- выбор новой роли -->
+          <select name="new_role" class="form-select form-select-sm">
+            <option value="student" {% if u.role=='student' %}selected{% endif %}>student</option>
+            <option value="teacher" {% if u.role=='teacher' %}selected{% endif %}>teacher</option>
+            <option value="admin"   {% if u.role=='admin'   %}selected{% endif %}>admin</option>
+          </select>
+          <input type="hidden" name="user_id" value="{{ u.id }}">
+          <button type="submit" name="action" value="change_role" class="btn btn-sm btn-primary">
+            Сменить
+          </button>
+          <button type="submit" 
+                  name="action" value="delete_user" 
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('Удалить пользователя {{ u.username }}?');">
+            Удалить
+          </button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

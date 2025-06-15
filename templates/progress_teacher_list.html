@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Прогресс студентов</h2>
+
+    {% if students %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ФИО</th>
+            <th>Логин</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+            <tr>
+              <!-- Номер по порядку -->
+              <td>{{ loop.index }}</td>
+
+              <!-- ФИО (если нет full_name, можно fallback на username) -->
+              <td>{{ student.full_name or student.username }}</td>
+
+              <!-- Логин -->
+              <td>{{ student.username }}</td>
+
+              <!-- Ссылка на подробный прогресс -->
+              <td>
+                <a href="{{ url_for('student_progress_detail', student_id=student.id) }}"
+                   class="btn btn-sm btn-primary">
+                  Просмотр
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Нет студентов для отображения.</p>
+    {% endif %}
+  </div>
+{% endblock %}

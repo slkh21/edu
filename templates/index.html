@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-1">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8 text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        Добро пожаловать на обучающую платформу
+      </h1>
+      <p class="lead mb-4 lh-lg">
+        Эта платформа создана для углублённого изучения темы: 
+        <span class="fw-semibold">"Дифференциальное исчисление функции одной переменной"</span>.
+      </p>
+      <p class="mb-5">
+        Используйте навигационное меню сверху, чтобы переходить между разделами курса, 
+        выполнять задания в тренажёре и отслеживать свой прогресс.
+      </p>
+    </div>
+  </div>
+
+  <div class="row gx-4 gy-5 justify-content-center">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">Курс</h5>
+          <p class="card-text flex-grow-1">
+            Последовательно просматривайте видео-лекции, 
+            читайте конспекты и примеры решений.
+          </p>
+          <a href="{{ url_for('course') }}" class="btn btn-primary mt-auto">
+            Перейти к курсу
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">Тренажёр</h5>
+          <p class="card-text flex-grow-1">
+            Решайте контрольные задания и мгновенно проверяйте ответы.
+          </p>
+          <a href="{{ url_for('tasks') }}" class="btn btn-primary mt-auto">
+            Перейти в тренажёр
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">Прогресс</h5>
+          <p class="card-text flex-grow-1">
+            Следите за своими результатами и анализируйте динамику обучения.
+          </p>
+          <a href="{{ url_for('progress') }}" class="btn btn-primary mt-auto">
+            Мой прогресс
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

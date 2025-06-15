@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mt-4">Управление видеолекциями</h2>
+
+<div class="row gy-4">
+
+  <!-- ── Левая колонка: добавить видео ── -->
+  <div class="col-xl-4 col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Добавить видео</div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          <input type="hidden" name="add_video" value="1">
+          <div class="mb-3">
+            <label class="form-label">Название</label>
+            <input name="title" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea name="description" rows="2" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Тема</label>
+            <select name="topic_id" class="form-select">
+              <option value="">— выберите —</option>
+              {% for t in topics %}
+              <option value="{{ t.id }}">{{ t.title }}</option>
+              {% endfor %}
+            </select>
+            <small class="text-muted d-block">или</small>
+            <input name="new_topic" class="form-control mt-1"
+                   placeholder="Создать новую тему">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Файл .mp4</label>
+            <input name="video_file" type="file" accept="video/mp4"
+                   class="form-control" required>
+          </div>
+          <button class="btn btn-success w-100">Загрузить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Правая колонка: списки видео и тем ── -->
+  <div class="col-xl-8 col-lg-7">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header fw-semibold d-flex justify-content-between">
+        <span>Видео ({{ videos|length }})</span>
+      </div>
+      <div class="card-body p-0">
+        {% if videos %}
+        <div class="table-responsive">
+          <table class="table table-striped align-middle mb-0">
+            <thead class="table-dark">
+              <tr>
+                <th>#</th><th>Название</th><th>Тема</th><th>Действия</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for v in videos %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ v.title }}</td>
+                <td>{{ v.topic.title if v.topic else 'Без темы' }}</td>
+                <td>
+                  <a href="{{ v.url }}" target="_blank"
+                     class="btn btn-sm btn-outline-primary me-1"
+                     title="Смотреть"><i class="bi bi-play-circle"></i></a>
+                  <form method="post" style="display:inline"
+                        onsubmit="return confirm('Удалить видео «{{ v.title }}»?');">
+                    <input type="hidden" name="delete_video" value="{{ v.id }}">
+                    <button class="btn btn-sm btn-outline-danger">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+          <p class="p-3 mb-0">Пока нет видео.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold d-flex justify-content-between">
+        <span>Темы ({{ topics|length }})</span>
+      </div>
+      <div class="card-body p-0">
+        {% if topics %}
+        <ul class="list-group list-group-flush">
+          {% for t in topics %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ t.title }}
+            <form method="post" style="margin:0;"
+                  onsubmit="return confirm('Удалить тему «{{ t.title }}» и все её видео?');">
+              <input type="hidden" name="delete_topic" value="{{ t.id }}">
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <p class="p-3 mb-0">Пока нет тем.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
